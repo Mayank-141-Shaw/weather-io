@@ -3,16 +3,27 @@
   "version": "1.0.0",
   "main": "node_modules/expo/AppEntry.js",
   "scripts": {
-    "start": "expo start",
+    "start": "set PORT=6010 && expo start",
     "android": "expo start --android",
     "ios": "expo start --ios",
     "web": "expo start --web"
   },
   "dependencies": {
+    "@expo-google-fonts/poppins": "^0.2.3",
+    "@expo/webpack-config": "^0.17.2",
+    "axios": "^1.4.0",
     "expo": "~47.0.8",
+    "expo-font": "~11.0.1",
     "expo-status-bar": "~1.4.2",
     "react": "18.1.0",
-    "react-native": "0.70.5"
+    "react-dom": "18.1.0",
+    "react-icons": "^4.8.0",
+    "react-native": "0.70.5",
+    "react-native-gesture-handler": "1.8.0",
+    "react-native-get-location": "^3.0.1",
+    "react-native-reanimated": "1.8.0",
+    "react-native-scroll-bottom-sheet": "^0.7.0",
+    "react-native-web": "~0.18.9"
   },
   "devDependencies": {
     "@babel/core": "^7.12.9"

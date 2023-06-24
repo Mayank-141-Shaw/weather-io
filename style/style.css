@@ -1,0 +1,40 @@
+.show-meter {
+  /* override default style */
+  appearance: none;
+  -webkit-appearance: none;
+  height: 8px;
+  width: 100%;
+  background: linear-gradient(
+    90deg,
+    rgba(0, 29, 171, 1) 0%,
+    rgba(255, 0, 138, 1) 100%
+  );
+  outline: none;
+  box-shadow: 0 0 1px black;
+  transition: opacity 0.2s;
+  border-radius: 5px;
+}
+
+.show-meter::-webkit-slider-thumb {
+  appearance: none;
+  -webkit-appearance: none;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: #fff;
+  cursor: pointer;
+  border: 1px solid black;
+}
+
+.link-box {
+  display: flex;
+  text-decoration: none;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  border-top: 1px solid rgb(134, 134, 134);
+  color: #fff;
+  padding: 8px 0;
+  margin-top: 16px;
+  font-size: 1rem;
+}
