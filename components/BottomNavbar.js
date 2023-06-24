@@ -45,6 +45,7 @@ export default function BottomNavbar() {
     toggleMidBtn(!midBtn);
     toggleMenuBtn(false);
     toggleTrackBtn(false);
+
     //toggleBottomSheet();
   };
 
