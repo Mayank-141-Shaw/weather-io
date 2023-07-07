@@ -1,4 +1,6 @@
 import axios from "axios";
+import { useDispatch } from "react-redux";
+import { setLocation } from "../redux/state-slices/locationSlice";
 
 export const getAqiData = async (lat, long) => {
   await axios
@@ -63,14 +65,13 @@ export const getPlacesListByGeocoding = async (place) => {
 };
 
 export const getCurrentDeviceLocationViaGPS = async () => {
-  let data;
+  const dispatch = useDispatch();
+
   await navigator.geolocation.getCurrentPosition(
     (res) => {
       console.log(res);
-      localStorage.setItem("_weather_app_currentLocation", JSON.stringify(res));
-      data = res;
+      dispatch(setLocation(res));
     },
     (err) => console.log(err)
   );
-  return data;
 };

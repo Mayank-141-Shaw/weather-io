@@ -17,7 +17,14 @@ import {
   getForecastData,
 } from "../services/query";
 
+import { useDispatch, useSelector } from "react-redux";
+import { setLocation } from "../redux/state-slices/locationSlice";
+import { setForecast } from "../redux/state-slices/forecastSlice";
+import { setAqi } from "../redux/state-slices/aqiSlice";
+
 const GetLiveGPSLocationBox = () => {
+  const dispatch = useDispatch();
+
   const requestGpsPermission = async () => {
     await PermissionsAndroid.request(
       "android.permission.ACCESS_FINE_LOCATION",
@@ -51,25 +58,47 @@ const GetLiveGPSLocationBox = () => {
 
   const getCompleteWeatherInfo = async () => {
     // first get live location via device gps
-    let deviceCoords = await getCurrentDeviceLocationViaGPS();
-    console.log(deviceCoords.coords.latitude);
+    // let deviceCoords = await getCurrentDeviceLocationViaGPS();
+    // console.log(deviceCoords.coords.latitude);
+
+    await navigator.geolocation.getCurrentPosition(
+      async (res) => {
+        dispatch(
+          setLocation({
+            latitude: res.coords.latitude,
+            longitude: res.coords.longitude,
+          })
+        );
+
+        // call forecast and aqi
+        const [resForecast, resAQI] = await Promise.all([
+          axios.get(
+            `https://api.open-meteo.com/v1/forecast?latitude=${res.coords.latitude}&longitude=${res.coords.longitude}&hourly=temperature_2m,dewpoint_2m,apparent_temperature,pressure_msl,cloudcover,windspeed_10m,winddirection_10m,visibility,precipitation,rain,precipitation_probability&daily=temperature_2m_max,temperature_2m_min,sunrise,uv_index_max,rain_sum,sunset&timezone=auto`
+          ),
+          axios.get(
+            `https://air-quality-api.open-meteo.com/v1/air-quality?latitude=${res.coords.latitude}&longitude=${res.coords.longitude}&timezone=auto&hourly=us_aqi`
+          ),
+        ]).catch((err) => console.log(err));
+
+        // localStorage.setItem(
+        //   "_weather_app_forecast",
+        //   JSON.stringify(resForecast.data)
+        // );
+        dispatch(setForecast(resForecast.data));
+        dispatch(setAqi(resAQI.data));
+        // localStorage.setItem("_weather_app_aqi", JSON.stringify(resAQI.data));
+
+        console.log(resAQI.data, resForecast.data);
+      },
+      (err) => {
+        console.log(err);
+      }
+    );
 
     // // get the location that was stored in localStorage
     // let deviceCoords = JSON.parse(
     //   localStorage.getItem("_weather_app_currentLocation")
     // );
-
-    // get lat and long of this coords and get forecast and aqi results
-    await getForecastData(
-      deviceCoords.coords.latitude,
-      deviceCoords.coords.longitude
-    );
-    await getAqiData(
-      deviceCoords.coords.latitude,
-      deviceCoords.coords.longitude
-    );
-
-    // now all required data is available and inside localstorage
   };
 
   return (

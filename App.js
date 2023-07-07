@@ -7,6 +7,9 @@ import bgHouse from "./assets/house-bg.png";
 import CurrentWeatherStatus from "./components/CurrentWeatherStatus";
 import BottomNavbar from "./components/BottomNavbar";
 import BottomInfoScrollerSheet from "./components/BottomInfoScrollerSheet";
+import { Provider } from "react-redux";
+import finalStore from "./redux/store/store";
+
 const weather = {
   city: "Montreal",
   temperature: 19,
@@ -23,17 +26,19 @@ export default function App() {
   };
 
   return (
-    <View style={styles.container}>
-      <ImageBackground style={styles.bgimg} source={bgImg} resizeMode="cover">
-        <CurrentWeatherStatus weather={weather} />
-        <Image source={bgHouse} style={styles.houseImg} />
-        {/* {btmSheetToggle ? <BottomInfoScrollerSheet /> : <></>} */}
-        <BottomNavbar
-          style={{ width: "100%" }}
-          toggleBottomSheet={toggleBottomSheet}
-        />
-      </ImageBackground>
-    </View>
+    <Provider store={finalStore}>
+      <View style={styles.container}>
+        <ImageBackground style={styles.bgimg} source={bgImg} resizeMode="cover">
+          <CurrentWeatherStatus weather={weather} />
+          <Image source={bgHouse} style={styles.houseImg} />
+          {/* {btmSheetToggle ? <BottomInfoScrollerSheet /> : <></>} */}
+          <BottomNavbar
+            style={{ width: "100%" }}
+            toggleBottomSheet={toggleBottomSheet}
+          />
+        </ImageBackground>
+      </View>
+    </Provider>
   );
 }
 

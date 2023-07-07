@@ -1,8 +1,13 @@
 import { StyleSheet, Text, View } from "react-native";
 import React from "react";
 import constant from "../assets/constants.json";
+import { useSelector } from "react-redux";
 
 export default function CurrentWeatherStatus({ weather }) {
+  const currentLocation = useSelector((state) => state.location.value);
+  const currentForecast = useSelector((state) => state.forecast.value);
+  const currentAqi = useSelector((state) => state.aqi.value);
+
   return (
     <View style={styles.infobox}>
       <Text style={styles.city}>{weather.city}</Text>

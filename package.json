@@ -11,6 +11,7 @@
   "dependencies": {
     "@expo-google-fonts/poppins": "^0.2.3",
     "@expo/webpack-config": "^0.17.2",
+    "@reduxjs/toolkit": "^1.9.5",
     "axios": "^1.4.0",
     "expo": "~47.0.8",
     "expo-font": "~11.0.1",
@@ -23,7 +24,9 @@
     "react-native-get-location": "^3.0.1",
     "react-native-reanimated": "1.8.0",
     "react-native-scroll-bottom-sheet": "^0.7.0",
-    "react-native-web": "~0.18.9"
+    "react-native-web": "~0.18.9",
+    "react-redux": "^8.1.1",
+    "redux": "^4.2.1"
   },
   "devDependencies": {
     "@babel/core": "^7.12.9"
