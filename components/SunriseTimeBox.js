@@ -5,8 +5,9 @@ import { BsSunriseFill } from "react-icons/bs";
 import daylightCurve from "../assets/SVG/daylight-curve.svg";
 
 import cnt from "../assets/constants.json";
+import { useSelector } from "react-redux";
 
-const SunriseTimeBox = ({ sunriseTime, sunsetTime }) => {
+const SunriseTimeBox = () => {
   /* sunrise is usually from 4:30am to 8:00am ==> i.e 3.5 hours or 3.5*60 mins of range = 210 mins*/
   /* so based on the sunrise time we get the X position and based on Y = sin(x) we calculate Y pos */
   /* X is sunrise time in minutes, which will give us the left position in % , and x radian will range from
@@ -16,6 +17,11 @@ const SunriseTimeBox = ({ sunriseTime, sunsetTime }) => {
   /* y ranges from -50% top to -115% top for the dot, so for x=0deg y should br -82.5%, height of each 
     half is 32.5%*/
 
+  const forecastData = useSelector((state) => state.forecast.value);
+
+  let sunriseTime = forecastData.daily.sunrise[0];
+  let sunsetTime = forecastData.daily.sunset[0];
+
   const getMinutes = (min) => {
     let hh = Number(min.split(":")[0]);
     let mm = Number(min.split(":")[1]);
@@ -24,8 +30,19 @@ const SunriseTimeBox = ({ sunriseTime, sunsetTime }) => {
   };
 
   // get time from sunrise time
-  const time = sunriseTime.split(" ")[0];
-  let mins = getMinutes(time) - getMinutes("4:30");
+  // const time = sunriseTime.split(" ")[0];
+  let time = `${new Date(sunriseTime).toLocaleTimeString()}`;
+  // remove seconds
+  time =
+    time.substring(time.length - 6, 0) +
+    time.substring(time.length, time.length - 3);
+  sunriseTime = time;
+  sunsetTime = new Date(sunsetTime).toLocaleTimeString();
+  sunsetTime =
+    sunsetTime.substring(sunsetTime.length - 6, 0) +
+    sunsetTime.substring(sunsetTime.length, sunsetTime.length - 3);
+  let mins =
+    getMinutes(time.substring(time.length - 3, 0)) - getMinutes("4:30");
 
   // calculate x percentage
   let xPosOfTimeDot = Math.floor((mins / 210) * 100);

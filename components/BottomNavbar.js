@@ -126,14 +126,14 @@ export default function BottomNavbar() {
                 flexWrap: "wrap",
               }}
             >
-              <UvIndexBox uvPoint={"4"} uvStatus={"Moderate"} />
-              <SunriseTimeBox sunriseTime={"5:23 AM"} />
-              <WindBox speed={"200"} directionInDegree={"69"} />
-              <RainFallBox rainfallPrevHr={"1.8"} rainfallFullDay={"1.2"} />
-              <TemperatureBox feelLikeTemp={"19"} actualTemp={"19"} />
-              <HumidityBox humidity={"90"} dewPoint={"17"} />
-              <VisibilityBox visibility={"8"} />
-              <PressureBox pressure={"950"} />
+              <UvIndexBox />
+              <SunriseTimeBox />
+              <WindBox />
+              <RainFallBox />
+              <TemperatureBox />
+              <HumidityBox />
+              <VisibilityBox />
+              <PressureBox />
 
               <br />
               <br />

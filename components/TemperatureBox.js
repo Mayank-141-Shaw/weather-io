@@ -3,8 +3,16 @@ import React from "react";
 import { BsThermometerHalf } from "react-icons/bs";
 
 import cnt from "../assets/constants.json";
+import { useSelector } from "react-redux";
 
-const TemperatureBox = ({ feelLikeTemp, actualTemp }) => {
+const TemperatureBox = () => {
+  const forecastData = useSelector((state) => state.forecast.value);
+
+  let currentHour = new Date().getHours();
+  let feelLikeTemp =
+    forecastData.hourly.apparent_temperature[Number(currentHour)];
+  let actualTemp = forecastData.hourly.temperature_2m[Number(currentHour)];
+
   return (
     <View style={styles.container}>
       <Text style={styles.heading}>

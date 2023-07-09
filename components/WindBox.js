@@ -6,10 +6,18 @@ import cnt from "../assets/constants.json";
 
 import windRingImg from "../assets/wind-direction-meter.png";
 import meterPin from "../assets/wind-meter-pin.png";
+import { useSelector } from "react-redux";
 
 /* max visibility is 16 km,  */
 
-const WindBox = ({ speed, directionInDegree }) => {
+const WindBox = () => {
+  const forecastData = useSelector((state) => state.forecast.value);
+
+  let currentHour = new Date().getHours();
+  let speed = forecastData.hourly.windspeed_10m[Number(currentHour)];
+  let directionInDegree =
+    forecastData.hourly.winddirection_10m[Number(currentHour)];
+
   return (
     <View style={styles.container}>
       <Text style={styles.heading}>

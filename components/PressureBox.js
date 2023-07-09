@@ -4,11 +4,17 @@ import { ImMeter } from "react-icons/im";
 
 import cnt from "../assets/constants.json";
 import pressureRingImg from "../assets/pressure_ring_meter.png";
+import { useSelector } from "react-redux";
 
 /* max visibility is 16 km,  */
 
-const PressureBox = ({ pressure }) => {
+const PressureBox = () => {
   /* pressure is around 800 - 1200 hPa , thus range is 400*/
+
+  const forecastData = useSelector((state) => state.forecast.value);
+
+  let currentHour = new Date().getHours();
+  let pressure = forecastData.hourly.pressure_msl[Number(currentHour)];
 
   let deg = (Math.abs(Number(pressure) - 800) / 400) * 360;
 

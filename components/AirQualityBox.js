@@ -5,17 +5,28 @@ import { MdOutlineArrowForwardIos } from "react-icons/md";
 
 import cnt from "../assets/constants.json";
 import "../style/style.css";
+import { useSelector } from "react-redux";
 
-const AirQualityBox = ({ qualityStatus, qualityPoints }) => {
+const AirQualityBox = () => {
+  const aqiData = useSelector((state) => state.aqi.value);
+
+  const setStatus = (pt) => {
+    if (pt > 350) return "High Risk";
+    else if (pt <= 350 && pt > 100) return "Moderate";
+    return "Safe";
+  };
+
+  let currentHour = new Date().getHours();
+  let qualityPoints = aqiData.hourly.us_aqi[Number(currentHour)];
+  let qualityStatus = setStatus(qualityPoints);
+
   return (
     <View style={styles.container}>
       <Text style={styles.heading}>
         <BiEqualizer />
         &nbsp; Air Quality
       </Text>
-      <Text style={styles.status}>
-        {qualityStatus ? qualityStatus : "3-Low Health Risk"}
-      </Text>
+      <Text style={styles.status}>{qualityStatus ? qualityStatus : ""}</Text>
       <input
         type={"range"}
         min={0}

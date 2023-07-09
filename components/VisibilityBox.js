@@ -3,23 +3,28 @@ import React from "react";
 import { FaEye } from "react-icons/fa";
 
 import cnt from "../assets/constants.json";
+import { useSelector } from "react-redux";
 
 /* max visibility is 16 km,  */
 
-const VisibilityBox = ({ visibility }) => {
+const VisibilityBox = () => {
+  const forecastData = useSelector((state) => state.forecast.value);
+
+  let currentHour = new Date().getHours();
+  let visibility =
+    Number(forecastData.hourly.visibility[Number(currentHour)]) / 1000;
+
   return (
     <View style={styles.container}>
       <Text style={styles.heading}>
         <FaEye />
         &nbsp; VISIBILITY
       </Text>
-      <p style={styles.visibility}>
-        {visibility ? Number(visibility) / 1000 : 8} km
-      </p>
+      <p style={styles.visibility}>{visibility ? visibility : 8} km</p>
       <br />
       <br />
       <p style={{ ...styles.bottomInfo, fontSize: "0.65rem", marginTop: "0" }}>
-        {visibility >= 6 ? "Good visibility" : "Poor Visibility"}
+        {visibility >= 24 ? "Good visibility" : "Poor Visibility"}
       </p>
     </View>
   );

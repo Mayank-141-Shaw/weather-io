@@ -3,8 +3,16 @@ import React from "react";
 import { TiWaves } from "react-icons/ti";
 
 import cnt from "../assets/constants.json";
+import { useSelector } from "react-redux";
 
-const HumidityBox = ({ humidity, dewPoint }) => {
+const HumidityBox = () => {
+  const forecastData = useSelector((state) => state.forecast.value);
+
+  let currentHour = new Date().getHours();
+  let humidity =
+    forecastData.hourly.precipitation_probability[Number(currentHour)];
+  let dewPoint = forecastData.hourly.dewpoint_2m[Number(currentHour)];
+
   return (
     <View style={styles.container}>
       <Text style={styles.heading}>

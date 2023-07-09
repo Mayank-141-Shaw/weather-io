@@ -3,8 +3,15 @@ import React from "react";
 import { TbDropletFilled } from "react-icons/tb";
 
 import cnt from "../assets/constants.json";
+import { useSelector } from "react-redux";
 
-const RainFallBox = ({ rainfallPrevHr, rainfallFullDay }) => {
+const RainFallBox = () => {
+  const forecastData = useSelector((state) => state.forecast.value);
+
+  let currentHour = new Date().getHours();
+  let rainfall = forecastData.hourly.rain[Number(currentHour)];
+  let rainfallFullDay = forecastData.daily.rain_sum[0];
+
   return (
     <View style={styles.container}>
       <Text style={styles.heading}>
@@ -12,7 +19,7 @@ const RainFallBox = ({ rainfallPrevHr, rainfallFullDay }) => {
         &nbsp; RAINFALL
       </Text>
       <p style={styles.rainfall}>
-        {rainfallPrevHr ? rainfallPrevHr : 1.8} mm <br />
+        {rainfall ? rainfall : 1.8} mm <br />
       </p>
       <p style={{ ...styles.rainfall, fontSize: "1.2rem", marginTop: "0" }}>
         in last hour

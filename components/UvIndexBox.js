@@ -5,21 +5,33 @@ import { MdSunny } from "react-icons/md";
 
 import cnt from "../assets/constants.json";
 import "../style/style.css";
+import { useSelector } from "react-redux";
 
-const UvIndexBox = ({ uvPoint, uvStatus }) => {
+const UvIndexBox = () => {
+  const forecastData = useSelector((state) => state.forecast.value);
+
+  const uvStatus = (pt) => {
+    if (pt >= 8) return "High";
+    else if (4 <= pt && pt < 8) return "Moderate";
+    else return "Low";
+  };
+
+  let uvMaxPoint = forecastData.daily.uv_index_max[0];
+  let status = uvStatus(uvMaxPoint);
+
   return (
     <View style={styles.container}>
       <Text style={styles.heading}>
         <MdSunny />
         &nbsp; UV INDEX
       </Text>
-      <p style={styles.point}>{uvPoint ? uvPoint : "4"}</p>
-      <p style={styles.status}>{uvStatus ? uvStatus : "Moderate"}</p>
+      <p style={styles.point}>{uvMaxPoint ? uvMaxPoint : "4"}</p>
+      <p style={styles.status}>{status ? status : "Moderate"}</p>
       <input
         type={"range"}
         min={0}
         max={11}
-        value={uvPoint ? uvPoint : "4"}
+        value={uvMaxPoint ? uvMaxPoint : "4"}
         draggable="false"
         disabled
         className="show-meter"
