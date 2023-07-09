@@ -62,6 +62,7 @@ export const forecastSlice = createSlice({
   reducers: {
     setForecast: (state, action) => {
       state.value = action.payload;
+      console.log("set forecast " + state.value);
     },
   },
 });

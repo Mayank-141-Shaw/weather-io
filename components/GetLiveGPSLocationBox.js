@@ -80,13 +80,8 @@ const GetLiveGPSLocationBox = () => {
           ),
         ]).catch((err) => console.log(err));
 
-        // localStorage.setItem(
-        //   "_weather_app_forecast",
-        //   JSON.stringify(resForecast.data)
-        // );
         dispatch(setForecast(resForecast.data));
         dispatch(setAqi(resAQI.data));
-        // localStorage.setItem("_weather_app_aqi", JSON.stringify(resAQI.data));
 
         console.log(resAQI.data, resForecast.data);
       },
@@ -94,11 +89,6 @@ const GetLiveGPSLocationBox = () => {
         console.log(err);
       }
     );
-
-    // // get the location that was stored in localStorage
-    // let deviceCoords = JSON.parse(
-    //   localStorage.getItem("_weather_app_currentLocation")
-    // );
   };
 
   return (
