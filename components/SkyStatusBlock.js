@@ -3,25 +3,37 @@ import React from "react";
 
 import cnt from "../assets/constants.json";
 
-const imgPaths = [
-  "../assets/sm-day-showers.png",
-  "../assets/sm-night-mild-rain.png",
-  "../assets/sm-night-partly-cloudy.png",
-  "../assets/sm-day-mild-rain.png",
-  "../assets/tornado.png",
-];
+import img1 from "../assets/sm-day-showers.png";
+import img2 from "../assets/sm-night-mild-rain.png";
+import img3 from "../assets/sm-night-partly-cloudy.png";
+import img4 from "../assets/sm-day-mild-rain.png";
+import img5 from "../assets/tornado.png";
 
-import sampleImg from "../assets/sm-night-mild-rain.png";
+const imgPaths = [img1, img2, img3, img4, img5];
 
-const SkyStatusBlock = ({ temp, time, sky, humidity }) => {
-  const timeAMorPM = time >= 12 ? "PM" : "AM";
-  time = time % 12;
-  time = time == 0 ? 12 : time;
+const SkyStatusBlock = ({ temp, time, cloudcover, humidity }) => {
+  let hours = new Date(time).getHours();
+
+  const timeAMorPM = hours >= 12 ? "PM" : "AM";
+  hours %= 12;
+  hours = hours == 0 ? 12 : hours;
+
+  // choose img from cloudcover, humidity and timeamorpm
+  let cloudInd = 0;
+
+  if (cloudcover >= 90 && humidity >= 90) cloudInd = 4; // storm
+  else if (timeAMorPM === "AM") {
+    if (cloudcover >= 60 && humidity >= 50) cloudInd = 0; // showers in day
+    else cloudInd = 3; // mild rain chance in day
+  } else {
+    if (cloudcover >= 60 && humidity >= 50) cloudInd = 1; // mild rain at night
+    else cloudInd = 2; // partly cloudy at night
+  }
 
   return (
     <View style={styles.container}>
-      <Text style={styles.time}>{`${time} ${timeAMorPM}`}</Text>
-      <img src={sampleImg} style={styles.img} />
+      <Text style={styles.time}>{`${hours} ${timeAMorPM}`}</Text>
+      <img src={imgPaths[cloudInd]} style={styles.img} />
       <Text style={styles.humidity}>{`${humidity}%`}</Text>
       <Text style={styles.temperature}>
         {temp}
@@ -57,10 +69,11 @@ const styles = StyleSheet.create({
   humidity: {
     color: "rgb(0,184,255)",
     transform: "translateY(-8px)",
+    paddingTop: "8px",
   },
   temperature: {
     color: "white",
-    fontSize: "1.1rem",
+    fontSize: "1rem",
     display: "flex",
     flexDirection: "row",
     justifyContent: "center",

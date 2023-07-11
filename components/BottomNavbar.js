@@ -20,8 +20,11 @@ import PressureBox from "./PressureBox";
 import WindBox from "./WindBox";
 import GetLiveGPSLocationBox from "./GetLiveGPSLocationBox";
 import ManualLocationBox from "./ManualLocationBox";
+import { useSelector } from "react-redux";
 
 export default function BottomNavbar() {
+  const forecastData = useSelector((state) => state.forecast.value);
+
   const [midBtn, toggleMidBtn] = useState(false);
   const [trackBtn, toggleTrackBtn] = useState(false);
   const [menuBtn, toggleMenuBtn] = useState(false);
@@ -49,17 +52,19 @@ export default function BottomNavbar() {
     //toggleBottomSheet();
   };
 
-  const data = [
-    { temp: 19, time: 12, sky: "cloudy", humidity: 30 },
-    { temp: 19, time: 12, sky: "cloudy", humidity: 30 },
-    { temp: 19, time: 12, sky: "cloudy", humidity: 30 },
-    { temp: 19, time: 12, sky: "cloudy", humidity: 30 },
-    { temp: 19, time: 12, sky: "cloudy", humidity: 30 },
-    { temp: 19, time: 12, sky: "cloudy", humidity: 30 },
-    { temp: 19, time: 12, sky: "cloudy", humidity: 30 },
-    { temp: 19, time: 12, sky: "cloudy", humidity: 30 },
-    { temp: 19, time: 12, sky: "cloudy", humidity: 30 },
-  ];
+  // getting hourly data for status flatlist
+  let weatherStatusBlockData = [];
+  let currentHour = new Date().getHours();
+
+  for (let i = currentHour; i < currentHour + 12; i++) {
+    weatherStatusBlockData.push({
+      time: forecastData.hourly.time[i],
+      temp: forecastData.hourly.temperature_2m[i],
+      humidity: forecastData.hourly.precipitation_probability[i],
+      sky: forecastData.hourly.cloudcover[i],
+    });
+  }
+
   return (
     <div style={styles.taskbar}>
       <View
@@ -95,7 +100,7 @@ export default function BottomNavbar() {
           >
             <FlatList
               style={styles.forecastArray}
-              data={data}
+              data={weatherStatusBlockData}
               horizontal
               renderItem={({ item, index }) => (
                 <TouchableHighlight
@@ -112,10 +117,7 @@ export default function BottomNavbar() {
               )}
             ></FlatList>
 
-            <AirQualityBox
-              qualityStatus={"2-High Health Risk"}
-              qualityPoints={137}
-            />
+            <AirQualityBox />
 
             {/* uv index box and sunrise box */}
             <div
@@ -159,7 +161,7 @@ export default function BottomNavbar() {
           >
             <FlatList
               style={styles.forecastArray}
-              data={data}
+              data={weatherStatusBlockData}
               horizontal
               renderItem={({ item, index }) => (
                 <TouchableHighlight
