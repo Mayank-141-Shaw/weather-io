@@ -29,6 +29,8 @@ export default function BottomNavbar() {
   const [trackBtn, toggleTrackBtn] = useState(false);
   const [menuBtn, toggleMenuBtn] = useState(false);
 
+  const [toggleHourlyOrWeekly, setHourlyOrWeekly] = useState(true)
+
   const trackLocation = () => {
     toggleMidBtn(false);
     toggleMenuBtn(false);
@@ -52,12 +54,36 @@ export default function BottomNavbar() {
     //toggleBottomSheet();
   };
 
+  const findDailyAvg = (arr=[]) => {
+    let temp = []
+    let sum = 0
+    let ind = 0
+    for(let i=0; i<arr.length; i++ ){
+      if(ind%24 == 23){
+        sum += arr[ind];
+        temp.push( Math.round(sum/24) )
+        ind++;
+        sum = 0;
+      }else{
+        sum+=arr[ind];
+        ind++;
+      }
+    }
+    return temp;
+  }
+
+  let avgDailyCloudcover = findDailyAvg(forecastData.hourly.cloudcover);
+  let avgDailyHumidity = findDailyAvg(forecastData.hourly.precipitation_probability);
+
+
   // getting hourly data for status flatlist
   let weatherStatusBlockData = [];
+  let weeklyWeatherStatusBlockData = [];
   let currentHour = new Date().getHours();
 
   for (let i = currentHour; i < currentHour + 12; i++) {
     weatherStatusBlockData.push({
+      date: null,
       time: forecastData.hourly.time[i],
       temp: forecastData.hourly.temperature_2m[i],
       humidity: forecastData.hourly.precipitation_probability[i],
@@ -65,16 +91,22 @@ export default function BottomNavbar() {
     });
   }
 
+  // weekly data
+  for(let i=0; i<7; i++){
+    weeklyWeatherStatusBlockData.push({
+      time: null,
+      date: forecastData.daily.time[i],
+      temp: forecastData.daily.temperature_2m_max[i],
+      sky: avgDailyCloudcover[i],
+      humidity: avgDailyHumidity[i]
+    })
+  }
+
   return (
     <div style={styles.taskbar}>
-      <View
-        style={{ ...styles.scrollTab, display: trackBtn ? "block" : "none" }}
-      >
-        {/* <div style={styles.glowEllipse}></div> */}
+      <View style={{ ...styles.scrollTab, display: trackBtn ? "block" : "none" }}>
         <div>
           <div style={styles.SwitchRow}>
-            {/* <Button color={"transparent"} title="Track Forecast" />
-            <Button color={"transparent"} title="Weekly Forecast" /> */}
             <Button title="Track Location" color={"transparent"} />
           </div>
           <div
@@ -88,17 +120,18 @@ export default function BottomNavbar() {
         </div>
       </View>
       <View style={{ ...styles.scrollTab, display: midBtn ? "block" : "none" }}>
-        {/* <div style={styles.glowEllipse}></div> */}
         <div>
           <div style={styles.SwitchRow}>
-            <Button color={"transparent"} title="Hourly Forecast" />
-            <Button color={"transparent"} title="Weekly Forecast" />
+            <Button color={"transparent"} onPress={()=>setHourlyOrWeekly(true)} title="Hourly Forecast" />
+            <Button color={"transparent"} onPress={()=>setHourlyOrWeekly(false)} title="Weekly Forecast" />
           </div>
           <div
             className="scroll-box"
             style={styles.weather_info_scrollable_box}
           >
-            <FlatList
+            {
+              toggleHourlyOrWeekly ? 
+              <FlatList
               style={styles.forecastArray}
               data={weatherStatusBlockData}
               horizontal
@@ -108,6 +141,7 @@ export default function BottomNavbar() {
                   onPress={() => console.log("comp pressed")}
                 >
                   <SkyStatusBlock
+                    date={item.date}
                     temp={item.temp}
                     time={item.time}
                     sky={item.sky}
@@ -116,6 +150,27 @@ export default function BottomNavbar() {
                 </TouchableHighlight>
               )}
             ></FlatList>
+            :
+            <FlatList
+              style={styles.forecastArray}
+              data={weeklyWeatherStatusBlockData}
+              horizontal
+              renderItem={({ item, index }) => (
+                <TouchableHighlight
+                  key={index}
+                  onPress={() => console.log("comp pressed")}
+                >
+                  <SkyStatusBlock
+                    temp={item.temp}
+                    date={item.date}
+                    time={item.time}
+                    sky={item.sky}
+                    humidity={item.humidity}
+                  />
+                </TouchableHighlight>
+              )}
+            ></FlatList>
+            }
 
             <AirQualityBox />
 
@@ -146,10 +201,7 @@ export default function BottomNavbar() {
           </div>
         </div>
       </View>
-      <View
-        style={{ ...styles.scrollTab, display: menuBtn ? "block" : "none" }}
-      >
-        {/* <div style={styles.glowEllipse}></div> */}
+      <View style={{ ...styles.scrollTab, display: menuBtn ? "block" : "none" }} >
         <div>
           <div style={styles.SwitchRow}>
             <Button color={"transparent"} title="Menu Forecast" />

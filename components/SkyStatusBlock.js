@@ -11,29 +11,68 @@ import img5 from "../assets/tornado.png";
 
 const imgPaths = [img1, img2, img3, img4, img5];
 
-const SkyStatusBlock = ({ temp, time, cloudcover, humidity }) => {
-  let hours = new Date(time).getHours();
+const month = ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"];
 
-  const timeAMorPM = hours >= 12 ? "PM" : "AM";
-  hours %= 12;
-  hours = hours == 0 ? 12 : hours;
+const SkyStatusBlock = ({ temp, date, time, cloudcover, humidity }) => {
+  
+  // we dealing with daily or weekly
+  let dailyOrWeekly = (date === null) ? true : false;
 
-  // choose img from cloudcover, humidity and timeamorpm
-  let cloudInd = 0;
 
-  if (cloudcover >= 90 && humidity >= 90) cloudInd = 4; // storm
-  else if (timeAMorPM === "AM") {
-    if (cloudcover >= 60 && humidity >= 50) cloudInd = 0; // showers in day
-    else cloudInd = 3; // mild rain chance in day
-  } else {
-    if (cloudcover >= 60 && humidity >= 50) cloudInd = 1; // mild rain at night
-    else cloudInd = 2; // partly cloudy at night
+  // get time info
+  const getTimeInfo = (_time, _cloudcover, _humidity) => {
+    let hours = new Date(_time).getHours();
+
+    const timeAMorPM = hours >= 12 ? "PM" : "AM";
+    hours %= 12;
+    hours = hours == 0 ? 12 : hours;
+
+    // choose img from cloudcover, humidity and timeamorpm
+    let cloudInd = 0;
+
+    if (_cloudcover >= 90 && _humidity >= 90) cloudInd = 4; // storm
+    else if (timeAMorPM === "AM") {
+      if (_cloudcover >= 60 && _humidity >= 50) cloudInd = 0; // showers in day
+      else cloudInd = 3; // mild rain chance in day
+    } else {
+      if (_cloudcover >= 60 && _humidity >= 50) cloudInd = 1; // mild rain at night
+      else cloudInd = 2; // partly cloudy at night
+    }
+
+    return {hours, timeAMorPM, cloudInd}
   }
+
+  // get weekly day info
+  const getDateInfo = (_date, _cloudcover, _humidity) => {
+    let dd = new Date(_date)
+    let day = dd.getDate();
+    let month = dd.getMonth()
+
+    // choose img from cloudcover, humidity and timeamorpm
+    let cloudInd = 0;
+
+    if (_cloudcover >= 90 && _humidity >= 90) cloudInd = 4; // storm
+    else if (_cloudcover >= 60 && _humidity >= 50) cloudInd = 0; // showers in day
+    else cloudInd = 3;
+
+
+    return {day, month, cloudInd}
+  }
+
+  // const [hours, timeAMorPM, cloudInd] = getTimeInfo(time, cloudcover, humidity)
+  // const [day, month, cloudInd] = getDateInfo(date, cloudcover, humidity)
+
+  const data = dailyOrWeekly ? getTimeInfo(time, cloudcover, humidity) : getDateInfo(date, cloudcover, humidity)
 
   return (
     <View style={styles.container}>
-      <Text style={styles.time}>{`${hours} ${timeAMorPM}`}</Text>
-      <img src={imgPaths[cloudInd]} style={styles.img} />
+      {
+        dailyOrWeekly ? 
+          <Text style={styles.time}>{`${data.hours} ${data.timeAMorPM}`}</Text>
+          :
+          <Text style={styles.time}>{`${month[Number(data.month)]}, ${data.day}`}</Text>
+      }
+      <img src={imgPaths[data.cloudInd]} style={styles.img} />
       <Text style={styles.humidity}>{`${humidity}%`}</Text>
       <Text style={styles.temperature}>
         {temp}
