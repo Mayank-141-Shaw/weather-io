@@ -19,17 +19,9 @@ export default function Homepage() {
   const getCompleteWeatherInfo = async () => {
     // first get live location via device gps
     // let deviceCoords = await getCurrentDeviceLocationViaGPS();
-    // console.log(deviceCoords.coords.latitude);
 
     await navigator.geolocation.getCurrentPosition(
       async (res) => {
-        // dispatch(
-        //   setLocation({
-        //     latitude: res.coords.latitude,
-        //     longitude: res.coords.longitude,
-        //   })
-        // );
-
         // call forecast and aqi and cityname
         const [resCityName, resForecast, resAQI] = await Promise.all([
           axios.get(

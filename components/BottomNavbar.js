@@ -221,61 +221,7 @@ export default function BottomNavbar() {
       >
         <div>
           <div style={styles.SwitchRow}>
-            <Button color={"transparent"} title="Menu Forecast" />
-            <Button color={"transparent"} title="Weekly Forecast" />
-          </div>
-          <div
-            className="scroll-box"
-            style={styles.weather_info_scrollable_box}
-          >
-            <FlatList
-              style={styles.forecastArray}
-              data={weatherStatusBlockData}
-              horizontal
-              renderItem={({ item, index }) => (
-                <TouchableHighlight
-                  key={index}
-                  onPress={() => console.log("comp pressed")}
-                >
-                  <SkyStatusBlock
-                    temp={item.temp}
-                    time={item.time}
-                    sky={item.sky}
-                    humidity={item.humidity}
-                  />
-                </TouchableHighlight>
-              )}
-            ></FlatList>
-
-            <AirQualityBox
-              qualityStatus={"2-High Health Risk"}
-              qualityPoints={137}
-            />
-
-            {/* uv index box and sunrise box */}
-            <div
-              style={{
-                display: "flex",
-                flexDirection: "row",
-                columnGap: "4%",
-                flexWrap: "wrap",
-              }}
-            >
-              <UvIndexBox uvPoint={"4"} uvStatus={"Moderate"} />
-              <SunriseTimeBox sunriseTime={"5:23 AM"} />
-              <WindBox speed={"200"} directionInDegree={"69"} />
-              <RainFallBox rainfallPrevHr={"1.8"} rainfallFullDay={"1.2"} />
-              <TemperatureBox feelLikeTemp={"19"} actualTemp={"19"} />
-              <HumidityBox humidity={"90"} dewPoint={"17"} />
-              <VisibilityBox visibility={"8"} />
-              <PressureBox pressure={"950"} />
-
-              <br />
-              <br />
-              <br />
-              <br />
-              <br />
-            </div>
+            <Button color={"transparent"} title="Menu" />
           </div>
         </div>
       </View>
