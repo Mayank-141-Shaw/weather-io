@@ -23,15 +23,18 @@ export default function Homepage() {
 
     await navigator.geolocation.getCurrentPosition(
       async (res) => {
-        dispatch(
-          setLocation({
-            latitude: res.coords.latitude,
-            longitude: res.coords.longitude,
-          })
-        );
+        // dispatch(
+        //   setLocation({
+        //     latitude: res.coords.latitude,
+        //     longitude: res.coords.longitude,
+        //   })
+        // );
 
-        // call forecast and aqi
-        const [resForecast, resAQI] = await Promise.all([
+        // call forecast and aqi and cityname
+        const [resCityName, resForecast, resAQI] = await Promise.all([
+          axios.get(
+            `https://api.bigdatacloud.net/data/reverse-geocode-client?latitude=${res.coords.latitude}&longitude=${res.coords.longitude}&localityLanguage=en`
+          ),
           axios.get(
             `https://api.open-meteo.com/v1/forecast?latitude=${res.coords.latitude}&longitude=${res.coords.longitude}&hourly=temperature_2m,dewpoint_2m,apparent_temperature,pressure_msl,cloudcover,windspeed_10m,winddirection_10m,visibility,precipitation,rain,precipitation_probability&daily=temperature_2m_max,temperature_2m_min,sunrise,uv_index_max,rain_sum,sunset&timezone=auto`
           ),
@@ -40,10 +43,17 @@ export default function Homepage() {
           ),
         ]).catch((err) => console.log(err));
 
+        dispatch(
+          setLocation({
+            latitude: res.coords.latitude,
+            longitude: res.coords.longitude,
+            name: resCityName.data.city + ", " + resCityName.data.countryName,
+          })
+        );
         dispatch(setForecast(resForecast.data));
         dispatch(setAqi(resAQI.data));
 
-        console.log(resAQI.data, resForecast.data);
+        // console.log(resCityName.data, resAQI.data, resForecast.data);
       },
       (err) => {
         console.log(err);
